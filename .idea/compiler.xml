@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -10,26 +11,28 @@
         <module name="payment-service" />
         <module name="inventory-service" />
         <module name="internalOrder-service" />
-        <module name="branch-service" />
+        <module name="department-service" />
+        <module name="request-service" />
         <module name="item-servcie" />
-        <module name="requset-service" />
         <module name="employee-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="branch-servcie" target="17" />
+      <module name="requset-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="auth-service" options="-parameters" />
       <module name="branch-servcie" options="-parameters" />
-      <module name="branch-service" options="-parameters" />
+      <module name="department-service" options="-parameters" />
       <module name="employee-service" options="-parameters" />
       <module name="internalOrder-service" options="-parameters" />
       <module name="inventory-service" options="-parameters" />
       <module name="item-servcie" options="-parameters" />
       <module name="payment-service" options="-parameters" />
+      <module name="request-service" options="-parameters" />
       <module name="requset-service" options="-parameters" />
     </option>
   </component>
