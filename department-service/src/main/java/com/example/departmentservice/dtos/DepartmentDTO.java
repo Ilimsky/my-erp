@@ -1,14 +1,16 @@
 package com.example.departmentservice.dtos;
 
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
-@Data
-public class DepartmentDTO {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class DepartmentDTO implements Serializable {
     private Long id;
     private String name;
     private String address;
