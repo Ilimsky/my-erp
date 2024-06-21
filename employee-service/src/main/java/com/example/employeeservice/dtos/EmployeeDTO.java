@@ -23,11 +23,11 @@ public class EmployeeDTO implements Serializable {
     // Уникальный идентификатор версии для сериализации
     private static final long serialVersionUUID = 1L;
 
-    // Поле для хранения идентификатора сотрудника
-    private Long id;
+    private Long employeeDTOId;
 
-    // Поле для хранения имени сотрудника
-    private String name;
+
+    private String employeeDTOName;
+
 
     // Поле для хранения отдела (другой DTO-объект)
     // Аннотация Jackson, указывающая имя свойства при сериализации/десериализации в JSON

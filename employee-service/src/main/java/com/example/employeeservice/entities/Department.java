@@ -13,13 +13,15 @@ import java.util.Set;
 @AllArgsConstructor
 // Аннотация Lombok, которая генерирует конструктор без параметров
 @NoArgsConstructor
+// Аннотация Lombok, которая используется для автоматического создания класса Builder
+@Builder
 public class Department {
 
     // Аннотация JPA, указывающая, что поле является первичным ключом
     @Id
     // Автоматическая генерация значений для поля id с использованием стратегии IDENTITY
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long departmentId;
 
     // Поле для хранения названия отдела
     private String departmentName;

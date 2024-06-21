@@ -1,7 +1,6 @@
 package com.example.employeeservice.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,10 +23,10 @@ public class DepartmentDTO implements Serializable {
     private static final Long serialVersionUUID = 1L;
 
     // Поле для хранения идентификатора отдела
-    private Long id;
+    private Long departmentDTOId;
 
     // Поле для хранения названия отдела
-    private String departmentName;
+    private String departmentDTOName;
 
     // Поле для хранения сотрудника (другой DTO-объект)
     // Аннотация Jackson, указывающая включать поле только если оно не равно null
