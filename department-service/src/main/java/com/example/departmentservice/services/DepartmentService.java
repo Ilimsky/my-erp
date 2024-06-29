@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface DepartmentService {
     Department save(Department department);
-    Department getOne(Long id);
-
     List<Department> getAll();
+
+    Department getOne(Long id);
 
     Department updateOne(Long id, Department department);
 
