@@ -2,10 +2,7 @@ package com.example.employeeservice.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -17,6 +14,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 // Аннотация Lombok, которая генерирует строитель (Builder) для класса
 @Builder
+
+@Getter
+@Setter
+
 // Указываем, что данный класс может быть сериализован (переведен в поток байтов для хранения или передачи)
 public class EmployeeDTO implements Serializable {
 

@@ -1,21 +1,19 @@
 package com.example.employeeservice.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 // Указываем, что данный класс является сущностью JPA
 @Entity
-// Аннотация Lombok, которая автоматически генерирует геттеры, сеттеры, методы equals, hashCode и toString
-@Data
 // Аннотация Lombok, которая генерирует конструктор с параметрами для всех полей класса
 @AllArgsConstructor
 // Аннотация Lombok, которая генерирует конструктор без параметров
 @NoArgsConstructor
 // Аннотация Lombok, которая используется для автоматического создания класса Builder
 @Builder
+
+@Getter
+@Setter
 public class Employee {
 
     // Аннотация JPA, указывающая, что поле является первичным ключом

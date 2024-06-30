@@ -20,32 +20,47 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     // Автоматически внедряем зависимость от репозитория EmployeeRepository.
     // Это позволяет использовать методы репозитория для доступа к данным сотрудников в базе данных
-    @Autowired
-    private EmployeeRepository repository;
+    private final EmployeeRepository repository;
 
     // Автоматически внедряем зависимость от ModelMapper
     // ModelMapper используется для преобразования между сущностями и их DTO-объектами
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
+    @Autowired
+    public EmployeeServiceImpl(EmployeeRepository repository, ModelMapper modelMapper) {
+        this.repository = repository;
+        this.modelMapper = modelMapper;
+    }
 
     /**
      * Создает нового сотрудника.
+     *
      * @param employeeDTO объект EmployeeDTO с данными нового сотрудника.
      * @return EmployeeDTO объект с сохраненными данными сотрудника.
      */
     @Override
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
         // Преобразуем DTO в сущность Employee
+        System.out.println("Mapping EmployeeDTO to Employee");
         Employee employee = modelMapper.map(employeeDTO, Employee.class);
+        System.out.println("Mapped Employee: " + employee);
+
         // Сохраняем сотрудника в базу данных
+        System.out.println("Saving Employee to repository");
         employee = repository.save(employee);
+        System.out.println("Saved Employee: " + employee);
+
         // Преобразуем сохраненную сущность обратно в DTO и возвращаем
-        return modelMapper.map(employee, EmployeeDTO.class);
+        System.out.println("Mapping Employee to EmployeeDTO");
+        EmployeeDTO result = modelMapper.map(employee, EmployeeDTO.class);
+        System.out.println("Mapped EmployeeDTO: " + result);
+
+        return result;
     }
 
     /**
      * Возвращает список всех сотрудников.
+     *
      * @return список объектов EmployeeDTO.
      */
     @Override
@@ -60,6 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * Возвращает сотрудника по его идентификатору.
+     *
      * @param id идентификатор сотрудника.
      * @return Optional с объектом EmployeeDTO, если сотрудник найден.
      */
@@ -68,7 +84,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         // Ищем сотрудника по идентификатору в базе данных
         Optional<Employee> employeeOptional = repository.findById(id);
         // Если сотрудник не найден, выбрасываем исключение
-        if (employeeOptional.isEmpty()){
+        if (employeeOptional.isEmpty()) {
             throw new EmployeeNotFoundException("Employee with id " + id + " not found");
         }
         // Если сотрудник найден, преобразуем его в DTO и возвращаем
@@ -77,7 +93,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * Обновляет данные сотрудника.
-     * @param id идентификатор сотрудника.
+     *
+     * @param id          идентификатор сотрудника.
      * @param employeeDTO объект EmployeeDTO с новыми данными сотрудника.
      * @return обновленный объект EmployeeDTO.
      * @throws EmployeeNotFoundException если сотрудник не найден.
@@ -86,7 +103,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO) {
         // Ищем сотрудника по идентификатору в базе данных
         Optional<Employee> employeeOptional = repository.findById(id);
-        if (employeeOptional.isPresent()){
+        if (employeeOptional.isPresent()) {
             // Если сотрудник найден, обновляем его данные
             Employee employee = employeeOptional.get();
             employee.setEmployeeName(employeeDTO.getEmployeeDTOName());
@@ -103,6 +120,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * Удаляет сотрудника по его идентификатору.
+     *
      * @param id идентификатор сотрудника.
      */
     @Override
@@ -113,6 +131,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * Возвращает список сотрудников по идентификатору отдела.
+     *
      * @param departmentId идентификатор отдела.
      * @return список объектов EmployeeDTO.
      */
