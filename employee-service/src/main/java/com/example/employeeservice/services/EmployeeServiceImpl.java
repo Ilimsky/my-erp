@@ -107,7 +107,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             // Если сотрудник найден, обновляем его данные
             Employee employee = employeeOptional.get();
             employee.setEmployeeName(employeeDTO.getEmployeeDTOName());
-            employee.setDepartment(modelMapper.map(employeeDTO.getDepartmentDTO(), Department.class));
+//            employee.setDepartment(modelMapper.map(employeeDTO.getDepartmentDTO(), Department.class));
             // Сохраняем обновленного сотрудника в базу данных
             employee = repository.save(employee);
             // Преобразуем сохраненную сущность обратно в DTO и возвращаем
@@ -129,21 +129,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         repository.deleteById(id);
     }
 
-    /**
-     * Возвращает список сотрудников по идентификатору отдела.
-     *
-     * @param departmentId идентификатор отдела.
-     * @return список объектов EmployeeDTO.
-     */
-    @Override
-    public List<EmployeeDTO> getEmployeesByDepartmentId(Long departmentId) {
+    //    @Override
+//    public List<EmployeeDTO> getEmployeesByDepartmentId(Long departmentId) {
         // Получаем всех сотрудников из базы данных и фильтруем по идентификатору отдела
-        List<Employee> employees = repository.findAll().stream()
-                .filter(e -> e.getDepartment().getDepartmentId().equals(departmentId))
-                .toList();
+//        List<Employee> employees = repository.findAll().stream()
+//                .filter(e -> e.getDepartment().getDepartmentId().equals(departmentId))
+//                .toList();
         // Преобразуем список сущностей в список DTO и возвращаем
-        return employees.stream()
-                .map(e -> modelMapper.map(e, EmployeeDTO.class))
-                .collect(Collectors.toList());
-    }
+//        return employees.stream()
+//                .map(e -> modelMapper.map(e, EmployeeDTO.class))
+//                .collect(Collectors.toList());
+//    }
 }

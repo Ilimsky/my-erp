@@ -26,9 +26,9 @@ public class Employee {
     private String employeeName;
 
     // Связь многие-к-одному с классом Department, данные будут загружаться жадно
-    @ManyToOne(fetch = FetchType.EAGER)
+//    @ManyToOne(fetch = FetchType.EAGER)
     // Настройка колонки для связи с классом Department
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
+//    @JoinColumn(name = "department_id", nullable = false)
+//    private Department department;
 }
 
