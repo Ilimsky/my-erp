@@ -1,10 +1,6 @@
 package com.example.employeeservice.dtos;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-
-import java.io.Serializable;
 
 // Аннотация Lombok, которая автоматически генерирует геттеры, сеттеры, методы equals, hashCode и toString
 @Data
@@ -19,22 +15,12 @@ import java.io.Serializable;
 @Setter
 
 // Указываем, что данный класс может быть сериализован (переведен в поток байтов для хранения или передачи)
-public class EmployeeDTO implements Serializable {
-
-    // Уникальный идентификатор версии для сериализации
-    private static final long serialVersionUUID = 1L;
+public class EmployeeDTO {
 
     private Long employeeDTOId;
 
 
     private String employeeDTOName;
 
-
-    // Поле для хранения отдела (другой DTO-объект)
-    // Аннотация Jackson, указывающая имя свойства при сериализации/десериализации в JSON
-    @JsonProperty("department")
-    // Аннотация Jackson, указывающая включать поле только если оно не равно null
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private DepartmentDTO departmentDTO;
 }
 

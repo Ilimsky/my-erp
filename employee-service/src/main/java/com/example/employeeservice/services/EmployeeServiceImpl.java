@@ -1,7 +1,6 @@
 package com.example.employeeservice.services;
 
 import com.example.employeeservice.dtos.EmployeeDTO;
-import com.example.employeeservice.entities.Department;
 import com.example.employeeservice.entities.Employee;
 import com.example.employeeservice.exceptions.EmployeeNotFoundException;
 import com.example.employeeservice.repositories.EmployeeRepository;

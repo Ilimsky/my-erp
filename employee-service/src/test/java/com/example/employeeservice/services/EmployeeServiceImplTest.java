@@ -52,7 +52,7 @@ class EmployeeServiceImplTest {
         employee.setEmployeeId(1L);
         employee.setEmployeeName("John Doe");
 
-        EmployeeDTO employeeDTO = new EmployeeDTO(1L, "John Doe", null);
+        EmployeeDTO employeeDTO = new EmployeeDTO(1L, "John Doe");
 
         given(repository.save(any(Employee.class))).willReturn(employee);
 
