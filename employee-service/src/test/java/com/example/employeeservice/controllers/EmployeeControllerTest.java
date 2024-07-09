@@ -13,6 +13,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -40,10 +43,34 @@ public class EmployeeControllerTest extends AbstractTestNGSpringContextTests {
         when(service.createEmployee(any(EmployeeDTO.class))).thenReturn(createEmployeeDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(employeeDTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(employeeDTO)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.employeeDTOName").value("John Doe"));
+    }
+
+    @Test
+    public void testGetAllEmployees() throws Exception {
+        EmployeeDTO employeeDTO1 = new EmployeeDTO();
+        employeeDTO1.setEmployeeDTOId(1L);
+        employeeDTO1.setEmployeeDTOName("John Doe");
+
+        EmployeeDTO employeeDTO2 = new EmployeeDTO();
+        employeeDTO2.setEmployeeDTOId(2L);
+        employeeDTO2.setEmployeeDTOName("Jane Smith");
+
+        List<EmployeeDTO> employeeDTOList = Arrays.asList(employeeDTO1, employeeDTO2);
+
+        when(service.getAllEmployees()).thenReturn(employeeDTOList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/employees")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].employeeDTOId").value(1L))
+                .andExpect(jsonPath("$[0].employeeDTOName").value("John Doe"))
+                .andExpect(jsonPath("$[1].employeeDTOId").value(2L))
+                .andExpect(jsonPath("$[1].employeeDTOName").value("Jane Smith"));
     }
 }
