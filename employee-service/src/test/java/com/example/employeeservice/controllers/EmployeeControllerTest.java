@@ -2,6 +2,7 @@ package com.example.employeeservice.controllers;
 
 
 import com.example.employeeservice.dtos.EmployeeDTO;
+import com.example.employeeservice.exceptions.EmployeeNotFoundException;
 import com.example.employeeservice.services.EmployeeServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class EmployeeControllerTest extends AbstractTestNGSpringContextTests {
 
         when(service.createEmployee(any(EmployeeDTO.class))).thenReturn(createEmployeeDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/")
+        mockMvc.perform(MockMvcRequestBuilders.post("/employee")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(employeeDTO)))
                 .andExpect(status().isOk())
@@ -98,6 +99,39 @@ public class EmployeeControllerTest extends AbstractTestNGSpringContextTests {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/employee/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testUpdateEmployee() throws Exception {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setEmployeeDTOName("Updated Name");
+
+        EmployeeDTO updatedEmployeeDTO = new EmployeeDTO();
+        updatedEmployeeDTO.setEmployeeDTOId(1L);
+        updatedEmployeeDTO.setEmployeeDTOName("Updated Name");
+
+        when(service.updateEmployee(anyLong(), any(EmployeeDTO.class))).thenReturn(updatedEmployeeDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/employee/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(employeeDTO)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.employeeDTOId").value(1L))
+                .andExpect(jsonPath("$.employeeDTOName").value("Updated Name"));
+    }
+
+    @Test
+    public void testUpdateEmployeeNotFound() throws Exception {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setEmployeeDTOName("Updated Name");
+
+        when(service.updateEmployee(anyLong(), any(EmployeeDTO.class))).thenThrow(new EmployeeNotFoundException("Employee not found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/employee/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(employeeDTO)))
                 .andExpect(status().isNotFound());
     }
 }

@@ -132,6 +132,34 @@ class EmployeeServiceImplTest {
 
     @Test
     void updateEmployee() {
+        // Создаем существующего сотрудника для тестирования
+        Employee existingEmployee = new Employee();
+        existingEmployee.setEmployeeId(1L);
+        existingEmployee.setEmployeeName("John Doe");
+
+        // Создаем DTO с новыми данными сотрудника
+        EmployeeDTO updateEmployeeDTO = new EmployeeDTO(1L, "John Smith");
+
+        // Настраиваем репозиторий для возврата существующего сотрудника по ID
+        given(repository.findById(1L)).willReturn(Optional.of(existingEmployee));
+
+        // Настраиваем репозиторий для сохранения обновленного сотрудника
+        given(repository.save(any(Employee.class))).willAnswer(invocation -> invocation.getArgument(0));
+
+        // Вызываем тестируемый метод
+        EmployeeDTO result = service.updateEmployee(1L, updateEmployeeDTO);
+
+        // Проверяем, что результат не пустой и соответствует ожидаемому
+        assertNotNull(result, "The result should not be null");
+        assertEquals(1L, result.getEmployeeDTOId(), "The EmployeeDTOId should not be 1");
+        assertEquals("John Smith", result.getEmployeeDTOName(), "The EmployeeDTOName should be 'John Smith");
+
+        // Проверяем, что данные сотрудника были обновлены
+        assertEquals("John Smith", existingEmployee.getEmployeeName(), "The employee's name should be updated to 'John Smith");
+
+        // Проверяем случай, когда сотрудник не найден
+        given(repository.findById(2L)).willReturn(Optional.empty());
+        assertThrows(EmployeeNotFoundException.class, () -> service.updateEmployee(2L, updateEmployeeDTO), "Expected EmployeeNotFoundException");
     }
 
     @Test

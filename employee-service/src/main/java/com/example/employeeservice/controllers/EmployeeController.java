@@ -1,6 +1,7 @@
 package com.example.employeeservice.controllers;
 
 import com.example.employeeservice.dtos.EmployeeDTO;
+import com.example.employeeservice.exceptions.EmployeeNotFoundException;
 import com.example.employeeservice.services.EmployeeServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,5 +60,21 @@ public class EmployeeController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @Operation(summary = "Update employee by ID",
+    description = "This method updates an employee by their ID")
+    @PutMapping("/employee/{id}")
+    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO){
+        log.info("Received request to update employee with ID: " + id);
+        try {
+            EmployeeDTO updatedEmployeeDTO = service.updateEmployee(id, employeeDTO);
+            log.info("Updated employee: " + updatedEmployeeDTO);
+            return ResponseEntity.ok(updatedEmployeeDTO);
+        }catch (EmployeeNotFoundException e){
+            log.warn("Employee with id: " + id + " not found");
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }
