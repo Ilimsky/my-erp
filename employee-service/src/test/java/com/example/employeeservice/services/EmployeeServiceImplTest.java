@@ -2,6 +2,7 @@ package com.example.employeeservice.services;
 
 import com.example.employeeservice.dtos.EmployeeDTO;
 import com.example.employeeservice.entities.Employee;
+import com.example.employeeservice.exceptions.EmployeeNotFoundException;
 import com.example.employeeservice.repositories.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +15,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -106,6 +107,27 @@ class EmployeeServiceImplTest {
 
     @Test
     void getEmployeeById() {
+        // Создаем сотрудника для тестирования
+        Employee employee = new Employee();
+        employee.setEmployeeId(1L);
+        employee.setEmployeeName("John Doe");
+
+        // Настраиваем репозиторий для возврата этого сотрудника по ID
+        given(repository.findById(1L)).willReturn(Optional.of(employee));
+
+        // Вызываем тестируемый метод
+        Optional<EmployeeDTO> employeeDTO = service.getEmployeeById(1L);
+
+        // Проверяем, что результат не пустой и соответствует ожидаемому
+        assertNotNull(employeeDTO, "The employeeDTO should not be null");
+        employeeDTO.ifPresent(dto -> {
+            assertEquals(1L, dto.getEmployeeDTOId(), "EmployeeDTOId should be 1");
+            assertEquals("John Doe", dto.getEmployeeDTOName(), "EmployeeDTOId should be 'John Doe");
+        });
+
+        // Проверяем случай, когда сотрудник не найден
+        given(repository.findById(2L)).willReturn(Optional.empty());
+        assertThrows(EmployeeNotFoundException.class, () -> service.getEmployeeById(2L), "Expected EmployeeNotFoundException");
     }
 
     @Test

@@ -15,8 +15,10 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -65,12 +67,37 @@ public class EmployeeControllerTest extends AbstractTestNGSpringContextTests {
         when(service.getAllEmployees()).thenReturn(employeeDTOList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/employees")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].employeeDTOId").value(1L))
                 .andExpect(jsonPath("$[0].employeeDTOName").value("John Doe"))
                 .andExpect(jsonPath("$[1].employeeDTOId").value(2L))
                 .andExpect(jsonPath("$[1].employeeDTOName").value("Jane Smith"));
+    }
+
+    @Test
+    public void testGetEmployeeById() throws Exception {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setEmployeeDTOId(1L);
+        employeeDTO.setEmployeeDTOName("John Doe");
+
+        when(service.getEmployeeById(anyLong())).thenReturn(Optional.of(employeeDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/employee/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.employeeDTOId").value(1L))
+                .andExpect(jsonPath("$.employeeDTOName").value("John Doe"));
+    }
+
+    @Test
+    public void testGetEmployeeByIdNotFound() throws Exception {
+        when(service.getEmployeeById(anyLong())).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/employee/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }
