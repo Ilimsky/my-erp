@@ -124,6 +124,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public void delete(Long id) {
+        // Проверяем, существует ли сотрудник с данным идентификатором
+        if (!repository.existsById(id)){
+            throw new EmployeeNotFoundException("Employee with id: " + id + " not found");
+        }
         // Удаляем сотрудника из базы данных по идентификатору
         repository.deleteById(id);
     }

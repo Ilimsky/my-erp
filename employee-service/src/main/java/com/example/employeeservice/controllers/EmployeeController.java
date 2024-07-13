@@ -76,5 +76,17 @@ public class EmployeeController {
         }
     }
 
-
+    @Operation(summary = "Delete employee by ID", description = "This method deletes an employee by their ID")
+    @DeleteMapping("/employee/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id){
+        log.info("Received request to delete employee with ID: " + id);
+        try {
+            service.delete(id);
+            log.info("Deleted employee with ID: " + id);
+            return ResponseEntity.noContent().build();
+        }catch (EmployeeNotFoundException e){
+            log.warn("Employee with ID: " + id + " not found");
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

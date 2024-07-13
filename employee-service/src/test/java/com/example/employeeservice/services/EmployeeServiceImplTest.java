@@ -20,6 +20,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceImplTest {
@@ -164,5 +166,26 @@ class EmployeeServiceImplTest {
 
     @Test
     void delete() {
+        // Создаем сотрудника для тестирования
+        Employee employee = new Employee();
+        employee.setEmployeeId(1L);
+        employee.setEmployeeName("John Doe");
+
+        // Настраиваем репозиторий для возврата сотрудника по ID
+        given(repository.existsById(1L)).willReturn(true);
+
+        // Вызываем тестируемый метод
+        assertDoesNotThrow(() -> service.delete(1L), "Expected delete method to not throw any exception");
+
+        // Проверяем, что метод репозитория для удаления был вызван
+        verify(repository).deleteById(1L);
+
+        // Проверяем случай, когда сотрудник не найден
+        given(repository.existsById(2L)).willReturn(false);
+        assertThrows(EmployeeNotFoundException.class, () -> service.delete(2L), "Expected EmployeeNotFoundException");
+
+        // Проверяем, что метод репозитория для удаления не был вызван для несуществующего сотрудника
+        verify(repository, never()).deleteById(2L);
     }
+
 }

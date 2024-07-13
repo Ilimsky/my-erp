@@ -20,6 +20,8 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -132,6 +134,28 @@ public class EmployeeControllerTest extends AbstractTestNGSpringContextTests {
         mockMvc.perform(MockMvcRequestBuilders.put("/employee/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(employeeDTO)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testDeleteEmployee() throws Exception {
+        Long employeeId = 1L;
+
+        willDoNothing().given(service).delete(employeeId);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/employee/{id}", employeeId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void testDeleteEmployeeNotFound() throws Exception {
+        Long employeeId = 1L;
+
+        willThrow(new EmployeeNotFoundException("Employee not found")).given(service).delete(employeeId);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/employee/{id}", employeeId)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 }
