@@ -19,7 +19,6 @@ public class EmployeeDTO {
 
     private Long employeeDTOId;
 
-
     private String employeeDTOName;
 
 }

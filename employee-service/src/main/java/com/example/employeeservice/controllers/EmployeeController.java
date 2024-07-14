@@ -16,6 +16,7 @@ import java.util.Optional;
 @RestController
 @Tag(name = "Employee methods")
 @Slf4j
+@CrossOrigin(origins = "http://localhost:62949")
 public class EmployeeController {
 
     private final EmployeeServiceImpl service;
