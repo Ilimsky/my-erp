@@ -10,7 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 // Аннотация Lombok, которая генерирует строитель (Builder) для класса
 @Builder
-
 @Getter
 @Setter
 
@@ -18,8 +17,6 @@ import lombok.*;
 public class EmployeeDTO {
 
     private Long employeeDTOId;
-
     private String employeeDTOName;
-
 }
 

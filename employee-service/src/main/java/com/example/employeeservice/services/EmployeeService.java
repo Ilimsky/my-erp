@@ -23,6 +23,4 @@ public interface EmployeeService {
     // Метод для удаления сотрудника по его идентификатору
     void delete(Long id);
 
-    // Метод для получения всех сотрудников по идентификатору отдела
-//    List<EmployeeDTO> getEmployeesByDepartmentId(Long departmentId);
 }

@@ -11,7 +11,6 @@ import lombok.*;
 @NoArgsConstructor
 // Аннотация Lombok, которая используется для автоматического создания класса Builder
 @Builder
-
 @Getter
 @Setter
 public class Employee {
@@ -25,10 +24,5 @@ public class Employee {
     // Поле для хранения имени сотрудника
     private String employeeName;
 
-    // Связь многие-к-одному с классом Department, данные будут загружаться жадно
-//    @ManyToOne(fetch = FetchType.EAGER)
-    // Настройка колонки для связи с классом Department
-//    @JoinColumn(name = "department_id", nullable = false)
-//    private Department department;
 }
 

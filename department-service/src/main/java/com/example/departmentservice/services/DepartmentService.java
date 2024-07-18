@@ -1,17 +1,19 @@
 package com.example.departmentservice.services;
 
-import com.example.departmentservice.entities.Department;
+import com.example.departmentservice.dtos.DepartmentDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DepartmentService {
-    Department save(Department department);
-    List<Department> getAll();
+    DepartmentDTO createDept(DepartmentDTO departmentDTO);
 
-    Department getOne(Long id);
+    List<DepartmentDTO> getAllDepts();
 
-    Department updateOne(Long id, Department department);
+    Optional<DepartmentDTO> getOneDeptById(Long id);
 
-    Department delete(Long id);
+    DepartmentDTO updateDept(Long id, DepartmentDTO departmentDTO);
+
+    void deleteDept(Long id);
 
 }

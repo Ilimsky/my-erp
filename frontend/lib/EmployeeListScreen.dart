@@ -29,7 +29,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Список сотрудников'),
+        title: const Text('Employee List'),
       ),
       body: FutureBuilder<List<Employee>>(
         future: _employeesFuture,
@@ -68,8 +68,8 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
             _refreshEmployees();
           }
         },
-        child: Icon(Icons.add),
-        tooltip: 'Добавить нового сотрудника',
+        child: const Icon(Icons.add),
+        tooltip: 'Add new employee',
       ),
     );
   }

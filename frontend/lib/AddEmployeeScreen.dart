@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'APIService.dart';
 import 'EmployeeDTO.dart';
 
@@ -10,20 +11,20 @@ class AddEmployeeScreen extends StatefulWidget {
 
 class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final APIService _apiService = APIService(client: http.Client());
+  final TextEditingController _nameController = TextEditingController();
 
-  Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
+  Future<void> _addEmployee() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final name = _nameController.text;
+      final employeeDTO = EmployeeDTO(name: name);
+
       try {
-        final newEmployee = EmployeeDTO(id: 0, name: _nameController.text);
-        print('Creating employee: ${newEmployee.toJson()}'); // Debug message
-        await _apiService.createEmployee(newEmployee);
-        Navigator.pop(context, true);
+        await APIService(client: http.Client()).createEmployee(employeeDTO);
+        Navigator.pop(context, true); // Return true to indicate successful addition
       } catch (e) {
-        print('Failed to create employee: $e'); // Debug message
+        // Handle any errors here, e.g., show a dialog
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create employee: $e')),
+          SnackBar(content: Text('Failed to add employee: $e')),
         );
       }
     }
@@ -32,13 +33,15 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add New Employee')),
+      appBar: AppBar(
+        title: const Text('Add Employee'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
-            children: <Widget>[
+            children: [
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: 'Name'),
@@ -49,9 +52,9 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: _submitForm,
+                onPressed: _addEmployee,
                 child: const Text('Add Employee'),
               ),
             ],

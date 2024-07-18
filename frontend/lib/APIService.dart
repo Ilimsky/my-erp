@@ -23,29 +23,37 @@ class APIService {
   }
 
   Future<Employee> createEmployee(EmployeeDTO employeeDTO) async {
-    final body = jsonEncode(employeeDTO.toJson());
+    // Remove ID from the request body
+    final body = jsonEncode({
+      'name': employeeDTO.name,
+    });
     print('Request body: $body'); // Debug message
-    final response = await client.post(
-      Uri.parse('$baseUrl/employee'),
-      headers: {'Content-Type': 'application/json'},
-      body: body,
-    );
 
-    print('Response status: ${response.statusCode}'); // Debug message
-    print('Response body: ${response.body}'); // Debug message
+    try {
+      final response = await client.post(
+        Uri.parse('$baseUrl/employee'),
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      );
 
-    if (response.statusCode == 200) {
-      final dynamic json = jsonDecode(response.body);
-      if (json != null) {
-        return Employee.fromJson(json);
+      print('Response status: ${response.statusCode}'); // Debug message
+      print('Response body: ${response.body}'); // Debug message
+
+      if (response.statusCode == 200) {
+        final dynamic json = jsonDecode(response.body);
+        if (json != null) {
+          return Employee.fromJson(json);
+        } else {
+          throw Exception('Received null response');
+        }
       } else {
-        throw Exception('Received null response');
+        throw Exception('Failed to create employee. Status code: ${response.statusCode}, Body: ${response.body}');
       }
-    } else {
-      throw Exception('Failed to create employee. Status code: ${response.statusCode}, Body: ${response.body}');
+    } catch (e) {
+      print('Error during HTTP request: $e'); // Debug message
+      rethrow; // Ensure the error is propagated
     }
   }
-
 
   Future<Employee> getEmployeeById(int id) async {
     final response = await client.get(Uri.parse('$baseUrl/employee/$id'));
