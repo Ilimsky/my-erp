@@ -1,3 +1,10 @@
+//V1__Create_department_table.sql
+CREATE TABLE department
+(
+    department_id   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    department_name VARCHAR(255) NOT NULL
+);
+
 //V2__Insert_initial_departments.sql
 
 INSERT INTO department (department_name)
@@ -10,3 +17,4 @@ VALUES ('16'),
        ('31'),
        ('35'),
        ('39');
+
