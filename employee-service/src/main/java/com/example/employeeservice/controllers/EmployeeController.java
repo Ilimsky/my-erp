@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @Tag(name = "Employee methods")
@@ -20,7 +21,6 @@ import java.util.Optional;
 public class EmployeeController {
 
     private final EmployeeServiceImpl service;
-
 
     @Autowired
     public EmployeeController(EmployeeServiceImpl service) {
@@ -35,6 +35,18 @@ public class EmployeeController {
         EmployeeDTO createEmployeeDTO = service.createEmployee(employeeDTO);
         log.info("Created employee: " + createEmployeeDTO);
         return ResponseEntity.ok(createEmployeeDTO);
+    }
+
+    @Operation(summary = "To create new employees in the DB",
+            description = "This method receives a list of employee DTOs and puts these entities into the DB")
+    @PostMapping("/employees")
+    public ResponseEntity<List<EmployeeDTO>> createEmployees(@RequestBody List<EmployeeDTO> employeeDTOs) {
+        log.info("Received request to create employees: " + employeeDTOs);
+        List<EmployeeDTO> createdEmployeeDTOs = employeeDTOs.stream()
+                .map(service::createEmployee)
+                .collect(Collectors.toList());
+        log.info("Created employees: " + createdEmployeeDTOs);
+        return ResponseEntity.ok(createdEmployeeDTOs);
     }
 
     @Operation(summary="Get all employees",

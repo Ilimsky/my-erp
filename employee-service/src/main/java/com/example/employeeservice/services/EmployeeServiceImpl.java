@@ -36,33 +36,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.departmentClient = departmentClient;
     }
 
-
-    /**
-     * Создает нового сотрудника.
-     *
-     * @param employeeDTO объект EmployeeDTO с данными нового сотрудника.
-     * @return EmployeeDTO объект с сохраненными данными сотрудника.
-     */
-//    @Override
-//    public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
-//        // Преобразуем DTO в сущность Employee
-//        System.out.println("Mapping EmployeeDTO to Employee");
-//        Employee employee = modelMapper.map(employeeDTO, Employee.class);
-//        System.out.println("Mapped Employee: " + employee);
-//
-//        // Сохраняем сотрудника в базу данных
-//        System.out.println("Saving Employee to repository");
-//        employee = repository.save(employee);
-//        System.out.println("Saved Employee: " + employee);
-//
-//        // Преобразуем сохраненную сущность обратно в DTO и возвращаем
-//        System.out.println("Mapping Employee to EmployeeDTO");
-//        EmployeeDTO result = modelMapper.map(employee, EmployeeDTO.class);
-//        System.out.println("Mapped EmployeeDTO: " + result);
-//
-//        return result;
-//    }
-
     @Override
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
         // Fetch department details using Feign Client

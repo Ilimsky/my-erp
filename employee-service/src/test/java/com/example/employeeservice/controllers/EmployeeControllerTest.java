@@ -1,10 +1,12 @@
 package com.example.employeeservice.controllers;
 
 
+import com.example.departmentservice.dtos.DepartmentDTO;
 import com.example.employeeservice.dtos.EmployeeDTO;
 import com.example.employeeservice.exceptions.EmployeeNotFoundException;
 import com.example.employeeservice.services.EmployeeServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -12,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -37,23 +40,54 @@ public class EmployeeControllerTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @BeforeMethod
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
     public void testCreateEmployee() throws Exception {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         employeeDTO.setEmployeeDTOName("John Doe");
+        employeeDTO.setDepartmentDTOId(1L); // Adding department ID
 
-        EmployeeDTO createEmployeeDTO = new EmployeeDTO();
-        createEmployeeDTO.setEmployeeDTOName("John Doe");
+        DepartmentDTO departmentDTO = new DepartmentDTO();
+        departmentDTO.setDepartmentDTOId(1L);
+        departmentDTO.setDepartmentDTOName("HR");
 
-        when(service.createEmployee(any(EmployeeDTO.class))).thenReturn(createEmployeeDTO);
+        EmployeeDTO createdEmployeeDTO = new EmployeeDTO();
+        createdEmployeeDTO.setEmployeeDTOName("John Doe");
+        createdEmployeeDTO.setDepartmentDTO(departmentDTO);
+
+        when(service.createEmployee(any(EmployeeDTO.class))).thenReturn(createdEmployeeDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/employee")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(employeeDTO)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.employeeDTOName").value("John Doe"));
+                .andExpect(jsonPath("$.employeeDTOName").value("John Doe"))
+                .andExpect(jsonPath("$.departmentDTO.departmentDTOId").value(1L))
+                .andExpect(jsonPath("$.departmentDTO.departmentDTOName").value("HR"));
     }
+
+//    @Test
+//    public void testCreateEmployee() throws Exception {
+//        EmployeeDTO employeeDTO = new EmployeeDTO();
+//        employeeDTO.setEmployeeDTOName("John Doe");
+//
+//        EmployeeDTO createEmployeeDTO = new EmployeeDTO();
+//        createEmployeeDTO.setEmployeeDTOName("John Doe");
+//
+//        when(service.createEmployee(any(EmployeeDTO.class))).thenReturn(createEmployeeDTO);
+//
+//        mockMvc.perform(MockMvcRequestBuilders.post("/employee")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(employeeDTO)))
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$.employeeDTOName").value("John Doe"));
+//    }
 
     @Test
     public void testGetAllEmployees() throws Exception {
