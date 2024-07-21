@@ -1,5 +1,6 @@
 package com.example.employeeservice.dtos;
 
+import com.example.departmentservice.dtos.DepartmentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +18,8 @@ public class EmployeeDTO {
 
     private Long employeeDTOId;
     private String employeeDTOName;
+
+    private Long departmentId; // Поле для идентификатора отдела
+    private DepartmentDTO departmentDTO; // Поле для DTO отдела
 }
 

@@ -27,5 +27,7 @@ public class Employee {
     // Поле для хранения имени сотрудника
     private String employeeName;
 
+    private Long departmentId; // Добавлено поле для хранения идентификатора отдела
+
 }
 

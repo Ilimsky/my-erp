@@ -1,8 +1,10 @@
 package com.example.employeeservice.services;
 
+import com.example.departmentservice.dtos.DepartmentDTO;
 import com.example.employeeservice.dtos.EmployeeDTO;
 import com.example.employeeservice.entities.Employee;
 import com.example.employeeservice.exceptions.EmployeeNotFoundException;
+import com.example.employeeservice.feign.DepartmentClient;
 import com.example.employeeservice.repositories.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +27,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     // ModelMapper используется для преобразования между сущностями и их DTO-объектами
     private final ModelMapper modelMapper;
 
+    private final DepartmentClient departmentClient;
+
     @Autowired
-    public EmployeeServiceImpl(EmployeeRepository repository, ModelMapper modelMapper) {
+    public EmployeeServiceImpl(EmployeeRepository repository, ModelMapper modelMapper, DepartmentClient departmentClient) {
         this.repository = repository;
         this.modelMapper = modelMapper;
+        this.departmentClient = departmentClient;
     }
 
     /**
@@ -58,7 +63,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-
     /**
      * Возвращает список всех сотрудников.
      *
@@ -66,11 +70,14 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public List<EmployeeDTO> getAllEmployees() {
-        // Получаем всех сотрудников из базы данных
         List<Employee> employees = repository.findAll();
-        // Преобразуем список сущностей в список DTO и возвращаем
         return employees.stream()
-                .map(e -> modelMapper.map(e, EmployeeDTO.class))
+                .map(e -> {
+                    EmployeeDTO employeeDTO = modelMapper.map(e, EmployeeDTO.class);
+                    DepartmentDTO departmentDTO = departmentClient.getDepartmentById(e.getDepartmentId());
+                    employeeDTO.setDepartmentDTO(departmentDTO);
+                    return employeeDTO;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -80,16 +87,17 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @param id идентификатор сотрудника.
      * @return Optional с объектом EmployeeDTO, если сотрудник найден.
      */
+
     @Override
     public Optional<EmployeeDTO> getEmployeeById(Long id) {
-        // Ищем сотрудника по идентификатору в базе данных
         Optional<Employee> employeeOptional = repository.findById(id);
-        // Если сотрудник не найден, выбрасываем исключение
         if (employeeOptional.isEmpty()) {
             throw new EmployeeNotFoundException("Employee with id " + id + " not found");
         }
-        // Если сотрудник найден, преобразуем его в DTO и возвращаем
-        return employeeOptional.map(e -> modelMapper.map(e, EmployeeDTO.class));
+        EmployeeDTO employeeDTO = modelMapper.map(employeeOptional.get(), EmployeeDTO.class);
+        DepartmentDTO departmentDTO = departmentClient.getDepartmentById(employeeOptional.get().getDepartmentId());
+        employeeDTO.setDepartmentDTO(departmentDTO);
+        return Optional.of(employeeDTO);
     }
 
     /**
@@ -102,19 +110,14 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO) {
-        // Ищем сотрудника по идентификатору в базе данных
         Optional<Employee> employeeOptional = repository.findById(id);
         if (employeeOptional.isPresent()) {
-            // Если сотрудник найден, обновляем его данные
             Employee employee = employeeOptional.get();
             employee.setEmployeeName(employeeDTO.getEmployeeDTOName());
-//            employee.setDepartment(modelMapper.map(employeeDTO.getDepartmentDTO(), Department.class));
-            // Сохраняем обновленного сотрудника в базу данных
+            employee.setDepartmentId(employeeDTO.getDepartmentId());
             employee = repository.save(employee);
-            // Преобразуем сохраненную сущность обратно в DTO и возвращаем
             return modelMapper.map(employee, EmployeeDTO.class);
         } else {
-            // Если сотрудник не найден, выбрасываем исключение
             throw new EmployeeNotFoundException("Employee with id " + id + " not found");
         }
     }
