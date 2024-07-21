@@ -1,7 +1,9 @@
 package com.example.employeeservice.dtos;
 
-import com.example.departmentservice.dtos.DepartmentDTO;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 // Аннотация Lombok, которая автоматически генерирует геттеры, сеттеры, методы equals, hashCode и toString
 @Data
@@ -11,20 +13,9 @@ import lombok.*;
 @AllArgsConstructor
 // Аннотация Lombok, которая генерирует строитель (Builder) для класса
 @Builder
-@Getter
-@Setter
 public class EmployeeDTO {
 
     private Long employeeDTOId;
     private String employeeDTOName;
-
-    private Long departmentDTOId;
-    private String departmentDTOName;
-    private DepartmentDTO departmentDTO;
-
-    public EmployeeDTO(Long employeeDTOId, String employeeDTOName) {
-        this.employeeDTOId = employeeDTOId;
-        this.employeeDTOName = employeeDTOName;
-    }
 }
 

@@ -9,4 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface DepartmentClient {
     @GetMapping("/department/{id}")
     DepartmentDTO getDepartmentById(@PathVariable("id") Long id);
+
+    // Add other necessary methods as needed
+
 }

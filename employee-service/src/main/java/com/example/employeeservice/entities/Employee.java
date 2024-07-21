@@ -27,8 +27,5 @@ public class Employee {
     // Поле для хранения имени сотрудника
     private String employeeName;
 
-    private Long departmentId;
-    private String departmentName;
-
 }
 

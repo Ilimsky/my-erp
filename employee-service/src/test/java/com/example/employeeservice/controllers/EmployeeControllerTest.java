@@ -1,7 +1,6 @@
 package com.example.employeeservice.controllers;
 
 
-import com.example.departmentservice.dtos.DepartmentDTO;
 import com.example.employeeservice.dtos.EmployeeDTO;
 import com.example.employeeservice.exceptions.EmployeeNotFoundException;
 import com.example.employeeservice.services.EmployeeServiceImpl;
@@ -49,45 +48,19 @@ public class EmployeeControllerTest extends AbstractTestNGSpringContextTests {
     public void testCreateEmployee() throws Exception {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         employeeDTO.setEmployeeDTOName("John Doe");
-        employeeDTO.setDepartmentDTOId(1L); // Adding department ID
 
-        DepartmentDTO departmentDTO = new DepartmentDTO();
-        departmentDTO.setDepartmentDTOId(1L);
-        departmentDTO.setDepartmentDTOName("HR");
+        EmployeeDTO createEmployeeDTO = new EmployeeDTO();
+        createEmployeeDTO.setEmployeeDTOName("John Doe");
 
-        EmployeeDTO createdEmployeeDTO = new EmployeeDTO();
-        createdEmployeeDTO.setEmployeeDTOName("John Doe");
-        createdEmployeeDTO.setDepartmentDTO(departmentDTO);
-
-        when(service.createEmployee(any(EmployeeDTO.class))).thenReturn(createdEmployeeDTO);
+        when(service.createEmployee(any(EmployeeDTO.class))).thenReturn(createEmployeeDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/employee")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(employeeDTO)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.employeeDTOName").value("John Doe"))
-                .andExpect(jsonPath("$.departmentDTO.departmentDTOId").value(1L))
-                .andExpect(jsonPath("$.departmentDTO.departmentDTOName").value("HR"));
+                .andExpect(jsonPath("$.employeeDTOName").value("John Doe"));
     }
-
-//    @Test
-//    public void testCreateEmployee() throws Exception {
-//        EmployeeDTO employeeDTO = new EmployeeDTO();
-//        employeeDTO.setEmployeeDTOName("John Doe");
-//
-//        EmployeeDTO createEmployeeDTO = new EmployeeDTO();
-//        createEmployeeDTO.setEmployeeDTOName("John Doe");
-//
-//        when(service.createEmployee(any(EmployeeDTO.class))).thenReturn(createEmployeeDTO);
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/employee")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(employeeDTO)))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.employeeDTOName").value("John Doe"));
-//    }
 
     @Test
     public void testGetAllEmployees() throws Exception {
