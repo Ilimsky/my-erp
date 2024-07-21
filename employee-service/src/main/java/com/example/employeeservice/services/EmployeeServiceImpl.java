@@ -1,8 +1,10 @@
 package com.example.employeeservice.services;
 
+import com.example.departmentservice.dtos.DepartmentDTO;
 import com.example.employeeservice.dtos.EmployeeDTO;
 import com.example.employeeservice.entities.Employee;
 import com.example.employeeservice.exceptions.EmployeeNotFoundException;
+import com.example.employeeservice.feign.DepartmentClient;
 import com.example.employeeservice.repositories.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     // ModelMapper используется для преобразования между сущностями и их DTO-объектами
     private final ModelMapper modelMapper;
 
+    private final DepartmentClient departmentClient;
+
     @Autowired
-    public EmployeeServiceImpl(EmployeeRepository repository, ModelMapper modelMapper) {
+    public EmployeeServiceImpl(EmployeeRepository repository, ModelMapper modelMapper, DepartmentClient departmentClient) {
         this.repository = repository;
         this.modelMapper = modelMapper;
+        this.departmentClient = departmentClient;
     }
+
 
     /**
      * Создает нового сотрудника.
@@ -37,25 +43,55 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @param employeeDTO объект EmployeeDTO с данными нового сотрудника.
      * @return EmployeeDTO объект с сохраненными данными сотрудника.
      */
+//    @Override
+//    public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
+//        // Преобразуем DTO в сущность Employee
+//        System.out.println("Mapping EmployeeDTO to Employee");
+//        Employee employee = modelMapper.map(employeeDTO, Employee.class);
+//        System.out.println("Mapped Employee: " + employee);
+//
+//        // Сохраняем сотрудника в базу данных
+//        System.out.println("Saving Employee to repository");
+//        employee = repository.save(employee);
+//        System.out.println("Saved Employee: " + employee);
+//
+//        // Преобразуем сохраненную сущность обратно в DTO и возвращаем
+//        System.out.println("Mapping Employee to EmployeeDTO");
+//        EmployeeDTO result = modelMapper.map(employee, EmployeeDTO.class);
+//        System.out.println("Mapped EmployeeDTO: " + result);
+//
+//        return result;
+//    }
+
     @Override
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
-        // Преобразуем DTO в сущность Employee
-        System.out.println("Mapping EmployeeDTO to Employee");
+        // Fetch department details using Feign Client
+        System.out.println("Fetching department details for department ID: " + employeeDTO.getDepartmentDTOId());
+        DepartmentDTO departmentDTO = departmentClient.getDepartmentById(employeeDTO.getDepartmentDTOId());
+        System.out.println("Fetched department details: " + departmentDTO);
+
+        // Map EmployeeDTO to Employee entity
         Employee employee = modelMapper.map(employeeDTO, Employee.class);
-        System.out.println("Mapped Employee: " + employee);
 
-        // Сохраняем сотрудника в базу данных
-        System.out.println("Saving Employee to repository");
+        // Set department details in employee entity
+        employee.setDepartmentId(departmentDTO.getDepartmentDTOId());
+        employee.setDepartmentName(departmentDTO.getDepartmentDTOName());
+
+        // Save employee entity to repository
+        System.out.println("Saving employee to repository: " + employee);
         employee = repository.save(employee);
-        System.out.println("Saved Employee: " + employee);
+        System.out.println("Saved employee: " + employee);
 
-        // Преобразуем сохраненную сущность обратно в DTO и возвращаем
-        System.out.println("Mapping Employee to EmployeeDTO");
+        // Map saved Employee entity back to EmployeeDTO
         EmployeeDTO result = modelMapper.map(employee, EmployeeDTO.class);
         System.out.println("Mapped EmployeeDTO: " + result);
 
+        // Set department details in the result DTO
+        result.setDepartmentDTO(departmentDTO);
+
         return result;
     }
+
 
     /**
      * Возвращает список всех сотрудников.
@@ -125,22 +161,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void delete(Long id) {
         // Проверяем, существует ли сотрудник с данным идентификатором
-        if (!repository.existsById(id)){
+        if (!repository.existsById(id)) {
             throw new EmployeeNotFoundException("Employee with id: " + id + " not found");
         }
         // Удаляем сотрудника из базы данных по идентификатору
         repository.deleteById(id);
     }
 
-    //    @Override
-//    public List<EmployeeDTO> getEmployeesByDepartmentId(Long departmentId) {
-        // Получаем всех сотрудников из базы данных и фильтруем по идентификатору отдела
-//        List<Employee> employees = repository.findAll().stream()
-//                .filter(e -> e.getDepartment().getDepartmentId().equals(departmentId))
-//                .toList();
-        // Преобразуем список сущностей в список DTO и возвращаем
-//        return employees.stream()
-//                .map(e -> modelMapper.map(e, EmployeeDTO.class))
-//                .collect(Collectors.toList());
-//    }
 }

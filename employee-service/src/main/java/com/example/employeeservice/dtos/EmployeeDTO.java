@@ -1,5 +1,6 @@
 package com.example.employeeservice.dtos;
 
+import com.example.departmentservice.dtos.DepartmentDTO;
 import lombok.*;
 
 // Аннотация Lombok, которая автоматически генерирует геттеры, сеттеры, методы equals, hashCode и toString
@@ -12,11 +13,18 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-
-// Указываем, что данный класс может быть сериализован (переведен в поток байтов для хранения или передачи)
 public class EmployeeDTO {
 
     private Long employeeDTOId;
     private String employeeDTOName;
+
+    private Long departmentDTOId;
+    private String departmentDTOName;
+    private DepartmentDTO departmentDTO;
+
+    public EmployeeDTO(Long employeeDTOId, String employeeDTOName) {
+        this.employeeDTOId = employeeDTOId;
+        this.employeeDTOName = employeeDTOName;
+    }
 }
 

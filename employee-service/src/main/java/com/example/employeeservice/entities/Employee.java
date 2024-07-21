@@ -1,6 +1,9 @@
 package com.example.employeeservice.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
 // Указываем, что данный класс является сущностью JPA
@@ -23,6 +26,9 @@ public class Employee {
 
     // Поле для хранения имени сотрудника
     private String employeeName;
+
+    private Long departmentId;
+    private String departmentName;
 
 }
 

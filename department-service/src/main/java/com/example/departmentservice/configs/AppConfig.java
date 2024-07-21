@@ -1,4 +1,4 @@
-package com.example.departmentservice;
+package com.example.departmentservice.configs;
 
 import com.example.departmentservice.dtos.DepartmentDTO;
 import com.example.departmentservice.entities.Department;
