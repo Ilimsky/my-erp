@@ -1,20 +1,15 @@
 class Employee {
-  int id;
-  String name;
+  final int id;
+  final String name;
+  final int departmentId;
 
-  Employee({required this.id, required this.name});
+  Employee({required this.id, required this.name, required this.departmentId});
 
   factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(
-      id: json['employeeDTOId'] as int? ?? 0,
-      name: json['employeeDTOName'] as String? ?? 'Unknown',
+      id: json['id'],
+      name: json['name'] ?? 'Unknown',
+      departmentId: json['departmentId'] ?? 0,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-    };
   }
 }

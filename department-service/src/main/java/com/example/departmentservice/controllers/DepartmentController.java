@@ -76,7 +76,6 @@ public class DepartmentController {
             return ResponseEntity.notFound().build();
         }
     }
-
     @Operation(summary = "Delete department by ID", description = "This method deletes an department by their ID")
     @DeleteMapping("/department/{id}")
     public ResponseEntity<Void> deleteDepartment(@PathVariable Long id){
