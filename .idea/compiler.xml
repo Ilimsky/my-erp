@@ -15,6 +15,7 @@
         <module name="department-service" />
         <module name="request-service" />
         <module name="api-gateway" />
+        <module name="admin-server" />
         <module name="item-servcie" />
         <module name="discovery-service" />
         <module name="employee-service" />
@@ -27,6 +28,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="admin-server" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
       <module name="auth-service" options="-parameters" />
       <module name="branch-servcie" options="-parameters" />
