@@ -1,0 +1,25 @@
+version: '3'
+services:
+  eureka:
+    build:
+      context: E:/Projects/JavaProjects/Microservices/My ERP/discovery-service
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - mynetwork
+
+  api-gateway:
+    build:
+      context: E:/Projects/JavaProjects/Microservices/My ERP/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    environment:
+      - EUREKA_SERVER_URL=http://eureka:8761/eureka
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
