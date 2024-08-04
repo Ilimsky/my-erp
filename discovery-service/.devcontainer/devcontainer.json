@@ -1,0 +1,14 @@
+{
+  "name": "Discovery Service",
+  "dockerFile": "Dockerfile",
+  "appPort": 8761,
+  "postCreateCommand": "echo 'Discovery Service setup complete!'",
+  "extensions": [
+    "vscjava.vscode-java-pack",
+    "redhat.java",
+    "spring-projects.vscode-spring-boot",
+    "vscjava.vscode-java-dependency"
+  ],
+  "workspaceMount": "source=${localWorkspaceFolder}/discovery-service,target=/workspace,type=bind",
+  "workspaceFolder": "/workspace"
+}

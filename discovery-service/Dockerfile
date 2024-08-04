@@ -12,3 +12,5 @@ EXPOSE 8761
 
 # Запустите JAR-файл приложения
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/discovery-service.jar"]
+
+#8761
